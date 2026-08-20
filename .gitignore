@@ -1,0 +1,19 @@
+# runtime / local
+openclaw-workspace-state.json
+*.sqlite*
+*.bak
+*.log
+*.jsonl
+
+# secrets (never commit)
+.env
+.env.*
+*.pem
+*.key
+id_rsa
+credentials/
+identity/
+
+# junk
+.DS_Store
+node_modules/
