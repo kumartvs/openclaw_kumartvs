@@ -1,21 +1,7 @@
-# USER.md - About Your Human
+# USER.md
 
-_Learn about the person you're helping. Update this as you go._
-
-- **Name:** Ven Tim
-- **What to call them:** Ven
-- **Pronouns:** _(optional)_
-- **Timezone:**
-- **Notes:** Runs OpenClaw on a VPS, uses Zapier MCP for Google integrations
-
-## Context
-
-_(What do they care about? What projects are they working on? What annoys them? What makes them laugh? Build this over time.)_
-
----
-
-The more you know, the better you can help. But remember — you're learning about a person, not building a dossier. Respect the difference.
-
-## Related
-
-- [Agent workspace](/concepts/agent-workspace)
+- **Name:** Kumar TVS (GitHub: kumartvs)
+- **Environment:** OpenClaw on VPS `bc-vps-306`, repo `openclaw_kumartvs`
+- **Current projects:** OpenClaw agent skills using already-connected Composio Google Calendar and Google Docs
+- **Tools:** OpenClaw, Composio (Google Calendar, Google Docs), Telegram for chat
+- **Goals:** Pull today's calendar and pull a working Google Doc, with the agent asking before any writes

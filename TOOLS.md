@@ -1,33 +1,18 @@
-# TOOLS.md - Local Notes
+# TOOLS.md
 
-Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup: camera names and locations, SSH hosts and aliases, preferred TTS voices, speaker/room names, device nicknames, anything environment-specific.
+Use **already connected** Composio tools only. No new OAuth.
 
-## Examples
+## Google Calendar (Composio)
+- **When:** user asks for schedule, today, upcoming, or "pull calendar"
+- **Default calendar:** primary
+- **Read:** list events for the requested day (default: today, local time)
+- **Write:** never unless the user confirms the exact event
 
-```markdown
-### Cameras
+## Google Docs (Composio)
+- **When:** user asks to pull, read, or summarize a Doc
+- **Default doc:** the user's primary working Google Doc (open the most recently used Doc if the title is not given)
+- **Read:** fetch title + body and summarize
+- **Write:** never unless the user confirms
 
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
-
-### SSH
-
-- home-server → 192.168.1.100, user: admin
-
-### TTS
-
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
-```
-
-## Why Separate?
-
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
-
----
-
-Add whatever helps you do your job. This is your cheat sheet.
-
-## Related
-
-- [Agent workspace](/concepts/agent-workspace)
+## Telegram
+- Already connected for chat. Use it to show Calendar/Docs pull results. Do not use Telegram as a new API.
