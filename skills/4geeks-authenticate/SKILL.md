@@ -24,16 +24,18 @@ Reads the student token from OpenClaw configuration (`auth.profiles.fourgeeks:de
    - If HTTP 404 or connection error: report the failure.
 
 ## Example API Response (HTTP 200)
+> **Security:** Sensitive values (ID, email, username) are masked with `***`.
+
 ```json
 {
-    "id": 19739,
-    "email": "vsktimmaraju@gmail.com",
-    "first_name": "Venkata",
-    "last_name": "Timmaraju",
-    "github": { "username": "kumartvs" },
+    "id": "***",
+    "email": "***@***.com",
+    "first_name": "YourFirstName",
+    "last_name": "YourLastName",
+    "github": { "username": "***" },
     "roles": [
-        { "role": "student", "academy": { "name": "4Geeks Miami", "id": 4 } },
-        { "role": "student", "academy": { "name": "4Geeks.com", "id": 47 } }
+        { "role": "student", "academy": { "name": "Your Academy", "id": X } },
+        { "role": "student", "academy": { "name": "Your Academy 2", "id": Y } }
     ]
 }
 ```
