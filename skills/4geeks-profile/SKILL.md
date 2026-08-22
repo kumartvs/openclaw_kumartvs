@@ -24,6 +24,36 @@ Reads the student token from OpenClaw configuration and calls the 4Geeks API to 
    - Syllabus: syllabus name, version, total duration
    - Enrollment status: financial status, educational status
 
+## Example API Response (HTTP 200)
+```json
+{
+    "id": 19739,
+    "email": "vsktimmaraju@gmail.com",
+    "first_name": "Venkata",
+    "last_name": "Timmaraju",
+    "github": { "username": "kumartvs" },
+    "profile": { "avatar_url": "https://..." },
+    "phone": "7816058186",
+    "roles": [{ "role": "student", "academy": { "id": 4, "name": "4Geeks Miami" } }],
+    "settings": { "lang": "en" },
+    "cohorts": [{
+        "cohort": {
+            "slug": "miami-ai-engineering-2",
+            "name": "miami-ai-engineering-2",
+            "kickoff_date": "2026-05-12T00:00:00Z",
+            "ending_date": "2026-10-24T00:00:00Z",
+            "current_module": 25,
+            "current_day": 43,
+            "stage": "STARTED",
+            "never_ends": false,
+            "syllabus_version": { "name": "AI Engineer", "version": 2, "duration_in_days": 72 },
+            "academy": { "name": "4Geeks Miami" },
+            "micro_cohorts": [23 items covering Tailwind, Git, Python, Docker, etc.]
+        }
+    }]
+}
+```
+
 ## Output
 - Full name and email
 - Cohort name + academy

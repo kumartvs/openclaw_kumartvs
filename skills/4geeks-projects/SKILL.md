@@ -30,6 +30,33 @@ Reads the student token from OpenClaw configuration and calls the cohort/user en
    - `completion.required.PROJECT.min_percent` — passing threshold
    - `completion.required.PROJECT.is_met` — whether requirement is met
 
+## Example API Response — completion object (from your record)
+```json
+{
+    "overall": { "total": 7, "completed": 0, "percent": 0.0 },
+    "required": {
+        "PROJECT": {
+            "total": 7,
+            "completed": 0,
+            "percent": 0.0,
+            "min_percent": 100.0,
+            "is_met": false,
+            "only_mandatory": true,
+            "missing": [
+                "ai-eng-milestone-web-fundamentals",
+                "exercise-terminal-challenge",
+                "first-collaborative-project-tailwind-css",
+                "html-css-artist-landing-seo-access",
+                "simple-dashboard-tailwind-css",
+                "todo-list-cli-python",
+                "typescript-cinema-seat-manager"
+            ]
+        }
+    },
+    "pending_required_count": 7
+}
+```
+
 ## Output
 - Total required projects (count)
 - Completed projects (count + percentage)

@@ -23,6 +23,21 @@ Reads the student token from OpenClaw configuration (`auth.profiles.fourgeeks:de
    - If HTTP 403 with `"Expired or invalid token"`: the token is expired or invalid. Report this to the user.
    - If HTTP 404 or connection error: report the failure.
 
+## Example API Response (HTTP 200)
+```json
+{
+    "id": 19739,
+    "email": "vsktimmaraju@gmail.com",
+    "first_name": "Venkata",
+    "last_name": "Timmaraju",
+    "github": { "username": "kumartvs" },
+    "roles": [
+        { "role": "student", "academy": { "name": "4Geeks Miami", "id": 4 } },
+        { "role": "student", "academy": { "name": "4Geeks.com", "id": 47 } }
+    ]
+}
+```
+
 ## Output
 - ✅ Token status: valid
 - Full name and email of authenticated user

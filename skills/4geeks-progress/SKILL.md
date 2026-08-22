@@ -24,6 +24,32 @@ Reads the student token from OpenClaw configuration and calls both the profile a
    - **Cohort timeline:** start date to end date
 5. Present as a clean summary with a text-based progress indicator.
 
+## Example Data (from your account)
+
+**Profile endpoint** (`/v1/admissions/user/me`) returns:
+- Cohort: miami-ai-engineering-2
+- Kickoff: 2026-05-12 → Ending: 2026-10-24
+- Syllabus: AI Engineer v2, 72 days total
+- Current module: 25, Current day: 43
+
+**Cohort/user endpoint** returns completion:
+```json
+{
+    "overall": { "total": 7, "completed": 0, "percent": 0.0 },
+    "required": {
+        "PROJECT": {
+            "total": 7,
+            "completed": 0,
+            "percent": 0.0,
+            "min_percent": 100.0,
+            "is_met": false
+        }
+    },
+    "pending_required_count": 7,
+    "is_complete": false
+}
+```
+
 ## Output
 - X of Y projects completed (Z%)
 - Requirement status: met / not met

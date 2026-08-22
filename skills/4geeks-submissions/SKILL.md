@@ -11,7 +11,7 @@ Retrieve all assignments you have submitted to 4Geeks Academy that are awaiting 
 Run this when you want to check which of your submitted assignments haven't been graded yet, when you submitted them, and what's still awaiting review.
 
 ## How it works
-Reads the student token from OpenClaw configuration and calls the 4Geeks API to find submitted deliverables. Uses the cohort/user endpoint for project completion status and the deliverables endpoint for submission details.
+Reads the student token from OpenClaw configuration and calls the 4Geeks API to find submitted deliverables. Uses the cohort/user endpoint for project completion status.
 
 ## Steps
 1. Read the token from `auth.profiles.fourgeeks:default.apiKey` in `openclaw.json`. Do not accept it from source code.
@@ -25,7 +25,33 @@ Reads the student token from OpenClaw configuration and calls the 4Geeks API to 
    - Check `overall.completed` and `overall.total`
    - `required.PROJECT.is_met` tells if the requirement is satisfied
    - The difference between `total` and `completed` gives pending count
-6. For submission details, there is a project submission service at `https://4geeks-project-submission.learn-pack.com/config?slug=<project_slug>` but it requires specific frontend auth (AWS access denied without the proper request context). The exact authentication mechanism needs to be captured from the learn.4geeks.com frontend's Network tab while submitting or viewing
+6. For submission details, there is a project submission service at `https://4geeks-project-submission.learn-pack.com/config?slug=<project_slug>` but it requires specific frontend auth (AWS access denied without the proper request context). The exact authentication mechanism needs to be captured from the learn.4geeks.com frontend's Network tab while submitting or viewing.
+
+## Example API Response — completion object (from your record)
+```json
+{
+    "overall": { "total": 7, "completed": 0, "percent": 0.0 },
+    "required": {
+        "PROJECT": {
+            "total": 7,
+            "completed": 0,
+            "percent": 0.0,
+            "min_percent": 100.0,
+            "is_met": false,
+            "missing": [
+                "ai-eng-milestone-web-fundamentals",
+                "exercise-terminal-challenge",
+                "first-collaborative-project-tailwind-css",
+                "html-css-artist-landing-seo-access",
+                "simple-dashboard-tailwind-css",
+                "todo-list-cli-python",
+                "typescript-cinema-seat-manager"
+            ]
+        }
+    },
+    "pending_required_count": 7
+}
+```
 
 ## Output
 - Project completion status (completed vs. required)
