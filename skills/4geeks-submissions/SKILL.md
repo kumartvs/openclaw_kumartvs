@@ -11,52 +11,41 @@ Retrieve all assignments you have submitted to 4Geeks Academy that are awaiting 
 Run this when you want to check which of your submitted assignments haven't been graded yet, when you submitted them, and what's still awaiting review.
 
 ## How it works
-Reads the student token from OpenClaw configuration and calls the 4Geeks API to find submitted deliverables. Uses the cohort/user endpoint for project completion status.
+Reads the student token from OpenClaw configuration and calls the 4Geeks tasks API to find completed deliverables. Looks at tasks that are DONE vs PENDING to determine what's been submitted.
 
 ## Steps
 1. Read the token from `auth.profiles.fourgeeks:default.apiKey` in `openclaw.json`. Do not accept it from source code.
-2. First, get your cohort slug and academy ID from `/v1/admissions/user/me`.
-3. Send a `GET` request to `https://breathecode.herokuapp.com/v1/admissions/academy/cohort/user?roles=STUDENT&cohorts=<cohort_slug>` with headers:
+2. Send a `GET` request to `https://breathecode.herokuapp.com/v1/assignment/user/me/task` with headers:
    - `Authorization: token <token>`
    - `Accept: application/json`
    - `Academy: <academy_id>`
-4. Find your user record in the response.
-5. Parse the `completion` object:
-   - Check `overall.completed` and `overall.total`
-   - `required.PROJECT.is_met` tells if the requirement is satisfied
-   - The difference between `total` and `completed` gives pending count
-6. For submission details, there is a project submission service at `https://4geeks-project-submission.learn-pack.com/config?slug=<project_slug>` but it requires specific frontend auth (AWS access denied without the proper request context). The exact authentication mechanism needs to be captured from the learn.4geeks.com frontend's Network tab while submitting or viewing.
+3. Check the completion counts:
+   - Completed (DONE) projects — these are submitted
+   - Pending projects — still need submission
+4. For submission details and grading status, try the deliverable endpoint at `/v1/assignment/task/<task_id>/deliver`.
 
-## Example API Response — completion object (from your record)
+## Example API Response
 ```json
 {
-    "overall": { "total": 7, "completed": 0, "percent": 0.0 },
-    "required": {
-        "PROJECT": {
-            "total": 7,
-            "completed": 0,
-            "percent": 0.0,
-            "min_percent": 100.0,
-            "is_met": false,
-            "missing": [
-                "ai-eng-milestone-web-fundamentals",
-                "exercise-terminal-challenge",
-                "first-collaborative-project-tailwind-css",
-                "html-css-artist-landing-seo-access",
-                "simple-dashboard-tailwind-css",
-                "todo-list-cli-python",
-                "typescript-cinema-seat-manager"
-            ]
-        }
+    "projects": {
+        "total": 77,
+        "done": 56,
+        "pending": 21
     },
-    "pending_required_count": 7
+    "all_tasks": {
+        "total": 322,
+        "done": 259,
+        "pending": 63
+    }
 }
 ```
 
 ## Output
-- Project completion status (completed vs. required)
-- Whether the requirement is currently met
-- If the submissions endpoint is unavailable: show what the completion data says
+- Project completion: done / pending
+- Overall task completion: done / pending
+- Count of submitted (DONE) projects
+- Count of pending (not yet submitted) projects
+- "Nothing awaiting grading" if all done
 
 ## Constraints
 - Token from config only, never hardcoded.

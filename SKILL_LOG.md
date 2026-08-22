@@ -15,7 +15,12 @@ The setup was mostly done — the student token was already stored in OpenClaw c
   - ✅ Found: `/v1/admissions/academy` — list of academies
   - ✅ Found: `/v1/certificate/me` — certificate list
   - ✅ Found: `/v1/admissions/academy/cohort/user?roles=STUDENT&cohorts=<slug>` — cohort member data with completion tracking, pending projects, and progress
-  - ❌ Not found: submissions/deliverables endpoint — `/v1/admissions/deliverable`, `/v1/admissions/submission`, `/v1/deliverable` all return 404. The submission service at `4geeks-project-submission.learn-pack.com` returns AWS AccessDenied without frontend session auth. The completion/project data is available through the cohort/user endpoint instead (pending_required_count, missing slugs)
+  - ✅ Found: `/v1/assignment/user/me/task` — the main tasks/projects endpoint (322 tasks returned, 259 DONE, 63 PENDING)
+  - ✅ Found: `/v1/assignment/academy/cohort/1620/task` — cohort-level task listing
+  - ✅ Found: `/v1/assignment/me/coderevision` — code revisions
+  - ✅ Found: `/v1/assignment/me/deletion_order` — repository deletions
+  - ✅ Found: `/v1/assignment/user/me/final_project` — final project info
+  - ✅ Updated all skill files from cohort/user completion endpoint to `/v1/assignment/user/me/task` which provides real per-task status data
 
 - **Auth method:** All calls require `Authorization: token <token>` header plus `Accept: application/json`. Some endpoints require `Academy: <id>` header.
 
@@ -72,13 +77,13 @@ Retrieves the student's full profile (name, email, GitHub, phone, avatar) and co
 Lists all assigned projects with their completion status — total required, completed count, percentage done, and which specific project slugs are still pending.
 
 **API endpoint(s):**
-- `GET https://breathecode.herokuapp.com/v1/admissions/academy/cohort/user?roles=STUDENT&cohorts=<cohort_slug>` with `Authorization: token <token>`, `Accept: application/json`, and `Academy: <academy_id>` header. Finds the user's record by ID, extracts `completion.required.PROJECT`.
+- `GET https://breathecode.herokuapp.com/v1/assignment/user/me/task` with `Authorization: token <token>`, `Accept: application/json`, and `Academy: 4` header. Returns all tasks (projects, exercises, lessons) with individual status (DONE/PENDING).
 
 **How to use/verify (invocation steps only — do not run):**
-1. Agent gets cohort slug from profile endpoint.
-2. Agent calls cohort/user endpoint with Academy header.
-3. Agent finds the user record (id 19739) and parses `completion`.
-4. **Success looks like:** "📋 Projects — 7 total required, 0 completed (0%). Requirement met? ❌ No. Pending projects:\n   - ai-eng-milestone-web-fundamentals\n   - exercise-terminal-challenge\n   - first-collaborative-project-tailwind-css\n   - html-css-artist-landing-seo-access\n   - simple-dashboard-tailwind-css\n   - todo-list-cli-python\n   - typescript-cinema-seat-manager"
+1. Agent reads token from config.
+2. Agent calls the tasks endpoint.
+3. Agent filters by `task_type: "PROJECT"` and groups by `task_status`.
+4. **Success looks like:** "📋 Projects — 77 total, 56 DONE, 21 PENDING. Pending: Build Your IT Resume, Monthly Sales Analyzer..."
 
 ---
 
@@ -88,10 +93,10 @@ Lists all assigned projects with their completion status — total required, com
 *"What exactly do I still need to finish?"* (wanting the specific deliverables)
 
 **What it does:**
-Extracts only the pending (not completed) project slugs from the completion data, giving a clean focused list of what still needs to be done.
+Filters the tasks API to items with `task_status: "PENDING"`, grouped by type (project, exercise, lesson), giving a detailed list of outstanding work.
 
 **API endpoint(s):**
-- Same as 4geeks-projects — `GET /v1/admissions/academy/cohort/user` — but filtered to only the `completion.required.PROJECT.missing` array.
+- Same as 4geeks-projects — `GET /v1/assignment/user/me/task` — filtered to `task_status === "PENDING"`.
 
 **How to use/verify (invocation steps only — do not run):**
 1. Agent gets cohort slug and academy ID from profile.
@@ -112,12 +117,12 @@ Aggregates profile and completion data to present a high-level progress summary 
 
 **API endpoint(s):**
 - `GET /v1/admissions/user/me` — for cohort context (module, day, dates)
-- `GET /v1/admissions/academy/cohort/user` — for completion data (overall + required)
+- `GET /v1/assignment/user/me/task` — for all task completion data (322 tasks: 259 DONE, 63 PENDING)
 
 **How to use/verify (invocation steps only — do not run):**
-1. Agent calls both endpoints with the token.
-2. Agent compiles the overview from both responses.
-3. **Success looks like:** "📊 Progress — 0 of 7 projects completed (0%) | Requirement: not met | Current: module 25, day 43 | Cohort: May 12 → Oct 24, 2026".
+1. Agent calls profile endpoint for cohort info.
+2. Agent calls tasks endpoint for completion counts.
+3. **Success looks like:** "📊 Progress — 322 total tasks: 259 DONE, 63 PENDING | Projects: 56 of 77 DONE | Cohort: miami-ai-engineering-2, module 25, day 43".
 4. **Partial data:** Reports what's available and what's missing.
 
 ---
@@ -128,29 +133,16 @@ Aggregates profile and completion data to present a high-level progress summary 
 *"What have I submitted that's still waiting to be graded?"* (real student need — checking review queue)
 
 **What it does:**
-Checks the completion data to show what's been completed vs. what's pending. Attempts to find submission timestamps from the available API endpoints.
+Uses the tasks API to show what's been completed (DONE) vs what's pending (PENDING), broken down by task type.
 
 **API endpoint(s):**
-- `GET /v1/admissions/academy/cohort/user?roles=STUDENT&cohorts=<cohort_slug>` (with Academy header) — primary endpoint
-- Attempts to access deliverable/submission-specific endpoints if available
-
-**Note:** The dedicated submissions/deliverables endpoint was not found through blind API probing. The following endpoints all returned 404:
-  - `/v1/admissions/deliverable`
-  - `/v1/admissions/submission`
-  - `/v1/deliverable`
-  - `/v1/submission`
-  - `/v1/admissions/user/19739/submissions`
-  - `/v1/admissions/user/19739/deliverables`
-
-The submission service at `4geeks-project-submission.learn-pack.com` returns AWS AccessDenied without frontend session context.
-
-Without these endpoints, the skill uses the completion data from the cohort/user endpoint instead. The completion data shows project counts and pending slugs but lacks submission timestamps and grading status.
+- `GET /v1/assignment/user/me/task` — with `Accept: application/json` and `Academy: 4` headers. Returns all tasks with individual status.
 
 **How to use/verify (invocation steps only — do not run):**
-1. Agent gets cohort slug and academy ID from profile.
-2. Agent calls the cohort/user endpoint.
-3. **Success looks like:** "📬 Submissions: 0 submitted, 7 pending. No items awaiting grading."
-4. **If items are completed:** shows the completed project slugs and their status.
+1. Agent reads token from config.
+2. Agent calls the tasks endpoint.
+3. Agent groups tasks by `task_status` (DONE/PENDING) and `task_type` (PROJECT/EXERCISE/LESSON).
+4. **Success looks like:** "📬 Submissions — 259 DONE, 63 PENDING | Projects: 56 of 77 DONE, 21 pending | Exercises: 110 of 148 DONE | Lessons: 93 of 97 DONE".
 
 ---
 
