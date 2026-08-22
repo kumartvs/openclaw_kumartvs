@@ -146,6 +146,25 @@ Uses the tasks API to show what's been completed (DONE) vs what's pending (PENDI
 
 ---
 
+### Skill 7: 4geeks-certificates (Extra)
+
+**Prompt used to create:**
+*"Add certificates also"*
+
+**What it does:**
+Retrieves all certificates earned at 4Geeks Academy with specialty name, instructor, status, and preview PDF URL.
+
+**API endpoint(s):**
+- `GET https://breathecode.herokuapp.com/v1/certificate/me` with `Authorization: token <token>`
+
+**How to use/verify (invocation steps only — do not run):**
+1. Agent reads token from config.
+2. Agent calls the certificates endpoint.
+3. **Success looks like:** "8 certificates: Backend Development with Coding Agents Miami (Ryan Castanier), Coding Fundamentals with Python (Ryan Castanier), Working with AI Coding Agents (Shane Bell), Front End Development with Coding Agents (Ryan Castanier), Coding Fundamentals with Typescript (Shane Bell), Web UI Fundamentals With Tailwind (Shane Bell), Command Line Git and Github (Shane Bell), Data Science and Machine Learning (Samir Chawla)".
+4. **Empty looks like:** "No certificates found."
+
+---
+
 ## C. Token Storage Note
 
 **The 4Geeks student token is stored in OpenClaw configuration only.**
