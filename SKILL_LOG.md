@@ -15,7 +15,7 @@ The setup was mostly done — the student token was already stored in OpenClaw c
   - ✅ Found: `/v1/admissions/academy` — list of academies
   - ✅ Found: `/v1/certificate/me` — certificate list
   - ✅ Found: `/v1/admissions/academy/cohort/user?roles=STUDENT&cohorts=<slug>` — cohort member data with completion tracking, pending projects, and progress
-  - ❌ Not found: submissions/deliverables endpoint (needs Network tab inspection from the learn.4geeks.com frontend)
+  - ❌ Not found: submissions/deliverables endpoint — `/v1/admissions/deliverable`, `/v1/admissions/submission`, `/v1/deliverable` all return 404. The submission service at `4geeks-project-submission.learn-pack.com` returns AWS AccessDenied without frontend session auth. The completion/project data is available through the cohort/user endpoint instead (pending_required_count, missing slugs)
 
 - **Auth method:** All calls require `Authorization: token <token>` header plus `Accept: application/json`. Some endpoints require `Academy: <id>` header.
 
@@ -134,7 +134,17 @@ Checks the completion data to show what's been completed vs. what's pending. Att
 - `GET /v1/admissions/academy/cohort/user?roles=STUDENT&cohorts=<cohort_slug>` (with Academy header) — primary endpoint
 - Attempts to access deliverable/submission-specific endpoints if available
 
-**Note:** The dedicated submissions/deliverables endpoint was not found through blind API probing. The completion data shows project counts (0 of 7 completed) but lacks submission timestamps. To get full submission details, the URL path needs to be captured from the learn.4geeks.com frontend's Network tab.
+**Note:** The dedicated submissions/deliverables endpoint was not found through blind API probing. The following endpoints all returned 404:
+  - `/v1/admissions/deliverable`
+  - `/v1/admissions/submission`
+  - `/v1/deliverable`
+  - `/v1/submission`
+  - `/v1/admissions/user/19739/submissions`
+  - `/v1/admissions/user/19739/deliverables`
+
+The submission service at `4geeks-project-submission.learn-pack.com` returns AWS AccessDenied without frontend session context.
+
+Without these endpoints, the skill uses the completion data from the cohort/user endpoint instead. The completion data shows project counts and pending slugs but lacks submission timestamps and grading status.
 
 **How to use/verify (invocation steps only — do not run):**
 1. Agent gets cohort slug and academy ID from profile.
