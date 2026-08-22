@@ -25,7 +25,7 @@ Reads the student token from OpenClaw configuration and calls the 4Geeks API to 
    - Check `overall.completed` and `overall.total`
    - `required.PROJECT.is_met` tells if the requirement is satisfied
    - The difference between `total` and `completed` gives pending count
-6. For submission timestamps and details, check if `/v1/admissions/submission` or a deliverable endpoint is available with the user/cohort context.
+6. For submission details, there is a project submission service at `https://4geeks-project-submission.learn-pack.com/config?slug=<project_slug>` but it requires specific frontend auth (AWS access denied without the proper request context). The exact authentication mechanism needs to be captured from the learn.4geeks.com frontend's Network tab while submitting or viewing
 
 ## Output
 - Project completion status (completed vs. required)
